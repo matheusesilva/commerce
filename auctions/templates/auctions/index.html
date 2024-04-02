@@ -1,0 +1,48 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if user.is_authenticated and listings_won %}
+        <h2>Listings you won!</h2>
+        <div class="grid">
+            {% for listing in listings_won %}
+                <a href="{% url 'listing' listing.id %}">
+                    <div class="card">
+                        <div class="title"><h3>{{listing.title}}</h3></div>
+                        <img src="{{listing.image}}" alt="Product Photo">
+                        <div class="description">{{listing.description}}</div>
+                        <div class="price">
+                            {% if listing.max_bid > listing.initial_price %}
+                                $ {{listing.max_bid}}
+                            {% else %}
+                                $ {{listing.initial_price}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                <div>There's no listings at the moment.</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2>Active Listings</h2>
+    <div class="grid">
+        {% for listing in listings %}
+            <a href="{% url 'listing' listing.id %}">
+                <div class="card">
+                    <div class="title"><h3>{{listing.title}}</h3></div>
+                    <div><img src="{{listing.image}}" alt="Product Photo"></div>
+                    <div class="description">{{listing.description}}</div>
+                    <div class="price">
+                        {% if listing.max_bid > listing.initial_price %}
+                            $ {{listing.max_bid}}
+                        {% else %}
+                            $ {{listing.initial_price}}
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            <div>There's no listings at the moment.</div>
+        {% endfor %}
+    </div>
+{% endblock %}

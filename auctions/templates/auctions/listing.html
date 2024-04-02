@@ -1,0 +1,71 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="poster">
+    <div class="title">
+        <h3>{{listing.title}}</h3>
+        {% if user.is_authenticated %}
+
+            {% if user != listing.owner %}
+                {% if is_wishlisted %}
+
+                    <a class="remove" href="{% url 'toggle_wishlist' listing.id %}">
+                        Remove from Wishlist
+                    </a>
+
+                {% else %}
+                    <a class="add" href="{% url 'toggle_wishlist' listing.id %}">
+                        Add to Wishlist
+                    </a>
+
+                {% endif %}
+
+            {% endif %}
+
+            {% if is_owner %}
+                <a href="{% url 'close_listing' listing.id %}">Close Listing</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div><img src="{{listing.image}}" alt="Product Photo"></div>
+    <div class="description">{{listing.description}}</div>
+    <div class="price">
+        {% if listing.max_bid > listing.initial_price %}
+            $ {{listing.max_bid}}
+        {% else %}
+            $ {{listing.initial_price}}
+        {% endif %}
+    </div>
+    {% if user.is_authenticated and listing.is_active %}
+        {% if user != listing.owner  %}
+        <div class="bid">
+            <form action="{% url 'add_bid' listing.id %}" method="POST">
+                <h3>Take a shot and leave a bid</h3>
+                {% csrf_token %}
+                {{place_bid}}
+                <input type="submit" value="Place a Bid">
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="comment">
+            <h3>Comments about it...</h3>
+            {% for comment in comments %}
+                <span class="user"><strong>{{comment.user}}: </strong></span>
+                <span class="content">{{comment.content}}</span>
+                <div class="date">{{comment.date}} {{comment.time}}</div>
+            {% empty %}
+                <div>There's no comments on this listing.</div>
+            {% endfor %}
+        </div>
+        <form action="{% url 'add_comment' listing.id %}" method="POST">
+            {% csrf_token %}
+            <textarea name="comment" id="" cols="30" rows="10" required></textarea>
+            <input type="submit" value="Add a Comment">
+        </form>
+    {% endif %}
+    {% if is_winner %}
+        <p>Congratulatios!! The listing is finished and you had the highest bid!</p>
+    {% endif %}
+</div>
+{% endblock %}

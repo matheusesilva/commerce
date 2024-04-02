@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="list">
+        <h3>My Wishlist</h3>
+    {% for listing in wishlist %}
+        <a href="{% url 'listing' listing.id %}">
+            <div class="item">
+                <div class="title">{{listing.title}}</div>
+                <div class="description">{{listing.description}}</div>
+                <div class="price">
+                    {% if listing.max_bid > listing.initial_price %}
+                        $ {{listing.max_bid}}
+                    {% else %}
+                        $ {{listing.initial_price}}
+                    {% endif %}
+                </div>
+                <img src="{{listing.image}}" alt="Product Image">
+            </div>
+        </a>
+    {% empty %}
+        <div>No itens wishlisted.</div>
+    {% endfor %}
+    </div>
+{% endblock %}
