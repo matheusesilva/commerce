@@ -57,7 +57,7 @@ To run the project on your machine:
 
 2. Create and activate a virtual environment:
    ```bash
-   python3 -m venv venv
+   python -m venv venv
    source venv/bin/activate
 
 3. Install Django:
@@ -66,6 +66,7 @@ To run the project on your machine:
 
 4. Apply database migrations:
    ```bash
+   python manage.py makemigrations auctions
    python manage.py migrate
 
 5. Create a superuser (for admin access):
